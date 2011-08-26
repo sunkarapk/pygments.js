@@ -9,10 +9,13 @@
     "type": "git",
     "url": "git@github.com:pkumar/pygments.js.git"
   },
-  "main": "index",
+  "main": "pygments",
+  "scripts": { "test": "vows pygments-test.js --spec" },
   "engines": {
     "node": "~v0.4.11"
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "vows": "0.5.11"
+  },
+  "dependencies": {}
 }
