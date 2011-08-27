@@ -2,7 +2,7 @@
   "author": "Pavan Kumar Sunkara <pavan.sss1991@gmail.com> (http://pkumar.github.com)",
   "name": "pygments",
   "description": "A pygments wrapper for nodejs",
-  "keywords": ["pygments", "wrapper", "syntax", "highlighting"]
+  "keywords": ["pygments", "wrapper", "syntax", "highlighting"],
   "version": "0.0.1",
   "homepage": "http://pkumar.github.com/pygments.js",
   "repository": {
