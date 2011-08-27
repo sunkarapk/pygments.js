@@ -77,7 +77,7 @@ pygments.convert_options = function(options) {
 pygments.merge_options = function(options) {
   var default_options = {
     'force': false,
-    'l': 'ruby',
+    'l': 'js',
     'f': 'html',
     'O': 'encoding=utf-8'
   }
