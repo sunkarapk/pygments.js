@@ -28,7 +28,7 @@ pygments.bin = 'pygmentize'
 // #### @format {String} Format for the output
 // #### @options {Object} Other options
 //
-pygments.colorize = function(target, lexer, format, options) {
+pygments.colorize = function(target, lexer, format, callback, options) {
   var options = options || {};
   if(lexer) options['l'] = lexer;
   if(format) options['f'] = format;
@@ -37,7 +37,7 @@ pygments.colorize = function(target, lexer, format, options) {
   target = this.stringize(target, (options['force']));
   delete options['force'];
 
-  return this.execute(target, options);
+  this.execute(target, options, callback);
 }
 
 //
@@ -45,18 +45,16 @@ pygments.colorize = function(target, lexer, format, options) {
 // #### @target {String} Target to be highlighted
 // #### @options {Object} Options
 //
-pygments.execute = function(target, options) {
+pygments.execute = function(target, options, callback) {
   var pyg = spawn(this.bin, this.convert_options(options));
-  var ret = '';
   pyg.stdout.on('data', function(data) {
-    console.log(data.toString());
+    callback(data.toString());
   });
   pyg.stderr.on('data', function (data) {
     console.log(data.toString());
   });
   pyg.stdin.write(target);
   pyg.stdin.end();
-  return ret;
 }
 
 //
