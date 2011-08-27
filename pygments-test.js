@@ -17,20 +17,33 @@ vows.describe('Pygments Test').addBatch({
     'trivial': function (pygments) {
        assert.isTrue (true);
     },
-    'colorize': {
+    'stringize': {
       'dirname': function (pygments) {
-        assert.equal (pygments.colorize('..', 'ruby', 'html'), '..');
+        assert.equal (pygments.stringize('..'), '..');
       },
       'filename': function (pygments) {
         var fd = fs.openSync('package.json', 'r');
-        assert.equal (pygments.colorize('package.json', 'ruby', 'html'), fs.readSync(fd, fs.statSync('package.json')['size'], null)[0]);
+        assert.equal (pygments.stringize('package.json'), fs.readSync(fd, fs.statSync('package.json')['size'], null)[0]);
         fs.closeSync(fd);
       },
       'filename force': function (pygments) {
-        assert.equal (pygments.colorize('package.json', 'ruby', 'html', {'force': true}), 'package.json');
+        assert.equal (pygments.stringize('package.json', true), 'package.json');
       },
-      'text': function (pygments) {
-        assert.equal (pygments.colorize('puts "Pygments"', 'ruby', 'html'), 'puts "Pygments"');
+    },
+    'options': {
+      'merge': function(pygments) {
+        assert.deepEqual (pygments.merge_options({'f': 'bbcode'}), {'force': false, 'l': 'ruby', 'f': 'bbcode', 'O': 'encoding=utf-8'});
+      },
+      'convert': function (pygments) {
+        assert.deepEqual (pygments.convert_options({'l': 'ruby', 'f': 'html'}), ['-lruby', '-fhtml'])
+      }
+    },
+    'validations': {
+      'flag': function (pygments) {
+        assert.throws (function() { pygments.convert_options({'l3xer': 'ruby'})}, Error);
+      },
+      'value': function (pygments) {
+        assert.throws (function() { pygments.convert_options({'l': 'r@j'})}, Error);
       }
     }
   }
