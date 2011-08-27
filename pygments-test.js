@@ -32,7 +32,7 @@ vows.describe('Pygments Test').addBatch({
     },
     'options': {
       'merge': function(pygments) {
-        assert.deepEqual (pygments.merge_options({'f': 'bbcode'}), {'force': false, 'l': 'ruby', 'f': 'bbcode', 'O': 'encoding=utf-8'});
+        assert.deepEqual (pygments.merge_options({'f': 'bbcode'}), {'force': false, 'l': 'js', 'f': 'bbcode', 'O': 'encoding=utf-8'});
       },
       'convert': function (pygments) {
         assert.deepEqual (pygments.convert_options({'l': 'ruby', 'f': 'html'}), ['-lruby', '-fhtml'])
