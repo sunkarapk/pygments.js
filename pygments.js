@@ -9,6 +9,8 @@ var spawn = require('child_process').spawn,
     exists = require('path').existsSync,
     fs = require('fs');
 
+var _ = require('underscore');
+
 var pygments = exports;
 
 //
@@ -81,9 +83,7 @@ pygments.merge_options = function(options) {
     'f': 'html',
     'O': 'encoding=utf-8'
   }
-  for(var option in options)
-    default_options[option] = options[option];
-  return default_options;
+  return _.defaults(options, default_options);
 }
 
 //
