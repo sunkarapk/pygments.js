@@ -9,7 +9,7 @@ A pygments wrapper for node.js
   curl http://npmjs.org/install.sh | sh
 ```
 
-### Installing cliff
+### Installing pygments
 ```
   [sudo] npm install pygments
 ```
