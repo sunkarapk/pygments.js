@@ -23,7 +23,7 @@ A pygments wrapper for node.js
 
 #### Highlight code
 
-```
+```javascript
 var highlight = require('pygments').colorize;
 
 highlight('puts "Hello World"', 'ruby', 'console', function(data) {
@@ -33,7 +33,7 @@ highlight('puts "Hello World"', 'ruby', 'console', function(data) {
 
 #### Highlight a file
 
-```
+```javascript
 var highlight = require('pygments').colorize;
 
 highlight('/home/pkumar/package.json', null, 'html', function(data) {
@@ -43,7 +43,7 @@ highlight('/home/pkumar/package.json', null, 'html', function(data) {
 
 If you want to highlight string `/home/pkumar/package.json` itself,
 
-```
+```javascript
 var highlight = require('pygments').colorize;
 
 highlight('/home/pkumar/package.json', null, 'html', function(data) {
