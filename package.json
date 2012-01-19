@@ -1,13 +1,44 @@
 {
   "name": "pygments",
-  "description": "A pygments wrapper for nodejs",
-  "keywords": ["pygments", "wrapper", "syntax", "highlighting"],
   "version": "0.0.1",
+  "author": "Pavan Kumar Sunkara <pavan.sss1991@gmail.com> (pksunkara.github.com)",
+  "description": "A pygments wrapper for nodejs",
   "main": "pygments",
-  "scripts": { "test": "vows pygments-test.js --spec" },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/pksunkara/pygments.js.git"
+  },
+  "keywords": [
+    "pygments",
+    "wrapper",
+    "syntax",
+    "highlighting"
+  ],
+  "homepage": "http://pksunkara.github.com/pygments.js",
+  "scripts": {
+    "test": "vows pygments-test.js --spec"
+  },
+  "contributors": [
+    {
+      "name": "Pavan Kumar Sunkara",
+      "email": "pavan.sss1991@gmail.com"
+    }
+  ],
+  "dependencies": {},
   "devDependencies": {
     "underscore": ">1.1.4",
     "vows": "0.5.11"
   },
-  "dependencies": {}
+  "engines": {
+    "node": ">=0.4"
+  },
+  "bugs": {
+    "url": "https://github.com/pksunkara/pygments.js/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/pksunkara/pygments.js/raw/master/LICENSE"
+    }
+  ]
 }
