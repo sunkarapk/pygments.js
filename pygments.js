@@ -49,11 +49,25 @@ pygments.colorize = function(target, lexer, format, callback, options) {
 //
 pygments.execute = function(target, options, callback) {
   var pyg = spawn(this.bin, this.convert_options(options));
-  pyg.stdout.on('data', function(data) {
-    callback(data.toString());
+  var chunks = [];
+  pyg.stdout.on('data', function(chunk) {
+    chunks.push(chunk);
   });
   pyg.stderr.on('data', function (data) {
     console.log(data.toString());
+  });
+  pyg.on('exit', function() {
+    var length = 0;
+    chunks.forEach(function(chunk) {
+      length += chunk.length;
+    });
+    var content = new Buffer(length);
+    var index = 0;
+    chunks.forEach(function(chunk) {
+      chunk.copy(content, index, 0, chunk.length);
+      index += chunk.length;
+    });
+    callback(content.toString());
   });
   pyg.stdin.write(target);
   pyg.stdin.end();
