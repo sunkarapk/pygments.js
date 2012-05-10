@@ -4,24 +4,24 @@
  * (C) 2011, Pavan Kumar Sunkara
  *
  */
-
+'use strict';
 var spawn = require('child_process').spawn,
     exists = require('path').existsSync,
     fs = require('fs');
 
 var _ = require('underscore');
 
-var pygments = exports;
+var pygments = {};
 
 //
 // Default timeout threshold for pygments
 //
-pygments.timeout = 10
+pygments.timeout = 10;
 
 //
 // Default binary path for pygmentize
 //
-pygments.bin = 'pygmentize'
+pygments.bin = 'pygmentize';
 
 //
 // ### function colorize
@@ -31,16 +31,15 @@ pygments.bin = 'pygmentize'
 // #### @options {Object} Other options
 //
 pygments.colorize = function(target, lexer, format, callback, options) {
-  var options = options || {};
+  options = options || {};
   if(lexer) options['l'] = lexer;
   if(format) options['f'] = format;
-
   options = this.merge_options(options);
   target = this.stringize(target, (options['force']));
   delete options['force'];
 
   this.execute(target, options, callback);
-}
+};
 
 //
 // ### function execute
@@ -71,7 +70,7 @@ pygments.execute = function(target, options, callback) {
   });
   pyg.stdin.write(target);
   pyg.stdin.end();
-}
+};
 
 //
 // ### function convert_options
@@ -84,7 +83,7 @@ pygments.convert_options = function(options) {
     cmd.push("-"+option + options[option]);
   }
   return cmd;
-}
+};
 
 //
 // ### function merge_options
@@ -96,9 +95,9 @@ pygments.merge_options = function(options) {
     'l': 'js',
     'f': 'html',
     'O': 'encoding=utf-8'
-  }
+  };
   return _.defaults(options, default_options);
-}
+};
 
 //
 // ### function stringize
@@ -116,9 +115,12 @@ pygments.stringize = function(target, force) {
     }
   }
   return target;
-}
+};
 
 var validate_args = function(flag, value) {
-  if(!flag.match(/^[a-z]+$/i)) throw new Error("Flag is invalid: " + flag)
-  if(!value.match(/^[a-z0-9\-\_\+\=\#\,\s]+$/i)) throw new Error("Flag value is invalid: -"+flag+" "+value)
-}
+  if(!flag.match(/^[a-z]+$/i)) throw new Error("Flag is invalid: " + flag);
+  if(!value.match(/^[a-z0-9\-\_\+\=\#\,\s]+$/i)) throw new Error("Flag value is invalid: -"+flag+" "+value);
+};
+
+
+exports.pygments = pygments;
