@@ -122,5 +122,4 @@ var validate_args = function(flag, value) {
   if(!value.match(/^[a-z0-9\-\_\+\=\#\,\s]+$/i)) throw new Error("Flag value is invalid: -"+flag+" "+value);
 };
 
-
-exports.pygments = pygments;
+module.exports = pygments;
