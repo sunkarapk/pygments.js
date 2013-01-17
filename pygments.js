@@ -4,12 +4,12 @@
  * (C) 2011, Pavan Kumar Sunkara
  *
  */
-'use strict';
+
 var spawn = require('child_process').spawn,
-    exists = require('path').existsSync,
+    path = require('path'),
     fs = require('fs');
 
-var _ = require('underscore');
+var exists = fs.existsSync || path.existsSync;
 
 var pygments = {};
 
@@ -32,13 +32,16 @@ pygments.bin = 'pygmentize';
 //
 pygments.colorize = function(target, lexer, format, callback, options) {
   options = options || {};
+
   if(lexer) options['l'] = lexer;
   if(format) options['f'] = format;
-  options = this.merge_options(options);
-  target = this.stringize(target, (options['force']));
+
+  options = pygments.merge_options(options);
+  target = pygments.stringize(target, (options['force']));
+
   delete options['force'];
 
-  this.execute(target, options, callback);
+  pygments.execute(target, options, callback);
 };
 
 //
@@ -47,14 +50,17 @@ pygments.colorize = function(target, lexer, format, callback, options) {
 // #### @options {Object} Options
 //
 pygments.execute = function(target, options, callback) {
-  var pyg = spawn(this.bin, this.convert_options(options));
+  var pyg = spawn(pygments.bin, pygments.convert_options(options));
   var chunks = [];
+
   pyg.stdout.on('data', function(chunk) {
     chunks.push(chunk);
   });
+
   pyg.stderr.on('data', function (data) {
     console.log(data.toString());
   });
+
   pyg.on('exit', function() {
     var length = 0;
     chunks.forEach(function(chunk) {
@@ -68,6 +74,7 @@ pygments.execute = function(target, options, callback) {
     });
     callback(content.toString());
   });
+
   pyg.stdin.write(target);
   pyg.stdin.end();
 };
@@ -78,10 +85,12 @@ pygments.execute = function(target, options, callback) {
 //
 pygments.convert_options = function(options) {
   var cmd = [];
+
   for(var option in options) {
     validate_args(option, options[option]);
     cmd.push("-"+option + options[option]);
   }
+
   return cmd;
 };
 
@@ -96,7 +105,14 @@ pygments.merge_options = function(options) {
     'f': 'html',
     'O': 'encoding=utf-8'
   };
-  return _.defaults(options, default_options);
+
+  Object.keys(default_options).forEach(function (key) {
+    if (options[key] == null) {
+      options[key] = default_options[key];
+    }
+  });
+
+  return options;
 };
 
 //
@@ -106,6 +122,7 @@ pygments.merge_options = function(options) {
 //
 pygments.stringize = function(target, force) {
   force = (force===undefined ? false : force);
+
   if(exists(target) && !force) {
     var target_stats = fs.statSync(target);
     if(target_stats.isFile()) {
@@ -114,6 +131,7 @@ pygments.stringize = function(target, force) {
       fs.closeSync(target_fd);
     }
   }
+
   return target;
 };
 
