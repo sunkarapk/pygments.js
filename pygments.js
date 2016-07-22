@@ -6,6 +6,7 @@
  */
 
 var spawn = require('child_process').spawn,
+    spawnSync = require('child_process').spawnSync,
     path = require('path'),
     fs = require('fs');
 
@@ -24,13 +25,14 @@ pygments.timeout = 10;
 pygments.bin = 'pygmentize';
 
 //
-// ### function colorize
+// ### function prepareColorizeParameters
 // #### @target {String} Target to be highlighted
 // #### @lexer {String} Lexer to use for highlighting
 // #### @format {String} Format for the output
 // #### @options {Object} Other options
+// #### @returns {Object} the target and the options merged
 //
-pygments.colorize = function(target, lexer, format, callback, options) {
+pygments.prepareColorizeParameters = function(target, lexer, format, options) {
   options = options || {};
 
   if(lexer) options['l'] = lexer;
@@ -41,7 +43,36 @@ pygments.colorize = function(target, lexer, format, callback, options) {
 
   delete options['force'];
 
-  pygments.execute(target, options, callback);
+  return {
+      target: target,
+      options: options
+  };
+}
+
+//
+// ### function colorize
+// #### @target {String} Target to be highlighted
+// #### @lexer {String} Lexer to use for highlighting
+// #### @format {String} Format for the output
+// #### @callback {Function} Callback to be called on the highlighted string
+// #### @options {Object} Other options
+//
+pygments.colorize = function(target, lexer, format, callback, options) {
+  colorizeParameters = pygments.prepareColorizeParameters(target, lexer, format, options);
+  pygments.execute(colorizeParameters.target, colorizeParameters.options, callback);
+};
+
+//
+// ### function colorizeSync
+// #### @target {String} Target to be highlighted
+// #### @lexer {String} Lexer to use for highlighting
+// #### @format {String} Format for the output
+// #### @options {Object} Other options
+// #### @returns {String} The highlighted string
+//
+pygments.colorizeSync = function(target, lexer, format, options) {
+  colorizeParameters = pygments.prepareColorizeParameters(target, lexer, format, options);
+  return pygments.executeSync(colorizeParameters.target, colorizeParameters.options);
 };
 
 //
@@ -77,6 +108,18 @@ pygments.execute = function(target, options, callback) {
 
   pyg.stdin.write(target);
   pyg.stdin.end();
+};
+
+
+//
+// ### function executeSync
+// #### @target {String} Target to be highlighted
+// #### @options {Object} Options
+// #### @returns {String} The highlighted string
+//
+pygments.executeSync = function(target, options) {
+  var spawnRes = spawnSync(pygments.bin, pygments.convert_options(options), {input:target});
+  return spawnRes.stdout.toString();
 };
 
 //
@@ -126,9 +169,7 @@ pygments.stringize = function(target, force) {
   if(exists(target) && !force) {
     var target_stats = fs.statSync(target);
     if(target_stats.isFile()) {
-      var target_fd = fs.openSync(target, 'r');
-      target = fs.readSync(target_fd, target_stats['size'], null)[0];
-      fs.closeSync(target_fd);
+      return fs.readFileSync(target);
     }
   }
 
