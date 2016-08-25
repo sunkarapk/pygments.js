@@ -166,10 +166,14 @@ pygments.merge_options = function(options) {
 pygments.stringize = function(target, force) {
   force = (force===undefined ? false : force);
 
-  if(exists(target) && !force) {
-    var target_stats = fs.statSync(target);
-    if(target_stats.isFile()) {
-      return fs.readFileSync(target);
+  if(!force) {
+    if(exists(target)) {
+      var target_stats = fs.statSync(target);
+      if(target_stats.isFile()) {
+        return fs.readFileSync(target);
+      }
+    } else {
+      throw new Error("File not found: "+target);
     }
   }
 
